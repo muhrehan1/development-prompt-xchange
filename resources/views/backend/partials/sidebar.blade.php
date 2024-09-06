@@ -13,7 +13,7 @@
                     </a>
                 </li>
               @endif
-              
+
               @if(auth()->user()->hasRole('admin'))
                 <li class="{{ Request::routeIs('subscription.create') ? 'active' : '' }}">
                     <a href="{{ route('subscription.lists') }}">
@@ -21,6 +21,18 @@
                         <span>Pricing</span>
                     </a>
                 </li>
+                       <li class="{{ Request::routeIs('admin.categories') ? 'active' : '' }}">
+                           <a href="{{ route('admin.categories') }}">
+                               <img src="{{ asset('backend/assets/img/tag.png') }}" alt="">
+                               <span>Categories</span>
+                           </a>
+                       </li>
+                       <li class="{{ Request::routeIs('blogs.index') ? 'active' : '' }}">
+                           <a href="{{ route('blogs.index') }}">
+                               <img src="{{ asset('backend/assets/img/tag.png') }}" alt="">
+                               <span>Blogs</span>
+                           </a>
+                       </li>
                  @endif
                  @if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('general_user') || auth()->user()->hasRole('content_creator'))
                 <li class="{{ Request::routeIs('profile_update') ? 'active' : '' }}">
@@ -29,7 +41,7 @@
                         <span>Profile Update</span>
                     </a>
                 </li>
-                
+
                   <li class="{{ Request::routeIs('user.prompts') ? 'active' : '' }}">
                     <a href="{{ route('user.prompts') }}">
                         <img src="{{ asset('backend/assets/img/tag.png') }}" alt="">
@@ -37,10 +49,6 @@
                     </a>
                 </li>
                  @endif
-                 
-                 
-            
-
             </ul>
         </div>
     </div>

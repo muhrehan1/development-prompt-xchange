@@ -32,7 +32,8 @@
                     @endforeach
                 @endif
                 <div class="col-md-12 btn_col">
-                    <a href="javascript:;" class="trans_btn">Login</a>
+
+                    <a href="{{route('login')}}" class="trans_btn">Login</a>
                 </div>
             </div>
         </div>

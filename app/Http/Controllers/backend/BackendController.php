@@ -64,15 +64,12 @@ class BackendController extends Controller
             'user_state' => 'required|string|max:255',
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
         ]);
-
-        // Check if validation fails
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
                 'errors' => $validator->errors()
             ]);
         }
-
         $user = Auth::user();
         $user->name = $request->input('customer_name');
         $user->phone = $request->input('user_phone');
@@ -383,10 +380,13 @@ public function testApi(Request $request)
             'steps' => $num_inference_steps,
         ]);
 
-        // Save each image URL to the database with the prompt_generation_id
         foreach ($result['output'] as $imageUrl) {
+            $imageContent = file_get_contents($imageUrl);
+            $imageName = time() . '_' . uniqid() . '.jpg';
+            $imagePath = storage_path('app/public/generated_images/' . $imageName);
+            file_put_contents($imagePath, $imageContent);
             $promptGeneration->generatedImages()->create([
-                'image_url' => $imageUrl,
+                'image_url' => asset('storage/generated_images/' . $imageName),
             ]);
         }
 
@@ -406,5 +406,14 @@ private function getModelBaseUrl($model)
 
     return $modelBaseUrls[$model] ?? 'https://modelslab.com/api/v3'; // Default to SDXL if no match found
 }
+
+        public function chatUser(){
+
+            $data =  [
+                'title' => 'Chat | Prompt Xchange'
+            ];
+
+            return view('backend.chat.chat' ,$data);
+        }
 
 }

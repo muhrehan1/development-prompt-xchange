@@ -4465,3 +4465,10 @@ section.recommend_sec .owl-nav button:hover {
     margin-right: -10px;
 
 }
+
+.no-blog {
+    background: linear-gradient(56deg, #1C2DB0, #CB48D8);
+    padding: 10px;
+    text-align: center;
+    border-radius: 10px;
+}

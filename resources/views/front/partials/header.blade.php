@@ -17,7 +17,9 @@
     <link rel="icon" href="{{asset('front/assets/img/logo.png')}}">
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css"/>
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css"/>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.7/axios.min.js" integrity="sha512-DdX/YwF5e41Ok+AI81HI8f5/5UsoxCVT9GKYZRIzpLxb8Twz4ZwPPX+jQMwMhNQ9b5+zDEefc+dcvQoPWGNZ3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+{{--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />--}}
 
 
 
@@ -42,9 +44,13 @@
                         <li class="nav-item {{ Request::routeIs('prompt.hire') ? 'active' : '' }}">
                             <a class="nav-link" href="{{ route('prompt.hire') }}">Hire</a>
                         </li>
-                        <li class="nav-item {{ Request::routeIs('prompt.create') ? 'active' : '' }}">
-                            <a class="nav-link" href="{{ route('prompt.create') }}">Create</a>
+                        <li class="nav-item {{ Request::routeIs('prompt.blogs') ? 'active' : '' }}">
+                            <a class="nav-link" href="{{ route('prompt.blogs') }}">Blogs</a>
                         </li>
+                <li class="nav-item {{ Request::routeIs('prompt.create') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('prompt.create') }}">Create</a>
+                </li>
+
                         <li class="nav-item {{ Request::routeIs('prompt.about') ? 'active' : '' }}">
                             <a class="nav-link" href="{{ route('prompt.about') }}">About us</a>
                         </li>

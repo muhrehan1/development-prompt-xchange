@@ -3,11 +3,11 @@
 <section class="blog_banner">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-sm-12 col-md-12" style="background:url('front/assets/img/blogs/bg_det.png');">
+            <div class="col-sm-12 col-md-12" style="background:url({{asset($blog_single->image)}});">
                 <div class="banner_cont">
-                    <a href="javascript:;">Consectetur Ex Co</a>
-                    <h2>Tempor Consectetur Est Elit</h2>
-                    <div class="date">Dec 24, 2023 <div class="dura">5 mins read</div>
+                    <a href="javascript:;">{{ $blog->category->name ?? 'No Category' }}</a>
+                    <h2>{{$blog_single->title}}</h2>
+                    <div class="date">{{ \Carbon\Carbon::parse($blog_single->publish_date)->format('M d, Y') }} <div class="dura">5 mins read</div>
                     </div>
                 </div>
             </div>
@@ -19,24 +19,24 @@
         <div class="row">
             <div class="col-md-8 col-sm-12">
                 <div class="blogs_det_cont">
-                    <p>Veniam voluptate ea enim fugiat elit dolor deserunt anim cillum officia tempor laborum fugiat quis cupidatat. Nisi enim ipsum cillum duis labore et voluptate pariatur. Sit dolor incididunt Lorem laborum officia mollit. Aliqua magna esse officia duis culpa aute tempor eu laboris sunt laborum Lorem reprehenderit veniam nisi nisi est minim aliquip. Adipisicing minim aliquip do occaecat do commodo sint consectetur nisi nisi cillum commodo officia dolor sint cillum cupidatat nisi.</p>
-                    <img src="{{asset('front/assets/img/blogs/car.png')}}">
-                    <p>Veniam voluptate ea enim fugiat elit dolor deserunt anim cillum officia tempor laborum fugiat quis cupidatat. Nisi enim ipsum cillum duis labore et voluptate pariatur.</p>
-                    <img src="{{asset('front/assets/img/blogs/carr.png')}}">
-                    <p>Veniam voluptate ea enim fugiat elit dolor deserunt anim cillum officia tempor laborum fugiat quis cupidatat. Nisi enim ipsum cillum duis labore et voluptate pariatur. Sit dolor incididunt Lorem laborum officia mollit.</p>
-
+                    <p>{!! $blog_single->content !!}</p>
                 </div>
             </div>
             <div class="col-md-4 col-sm-12">
                 <div class="blog_det_sidebar">
                     <h3>The Latest</h3>
-                    @for($i=1;$i<=5;$i++) <div class="blogs_link">
-                        <strong>Startup Journey Insights For Female
-                            Entrepreneurs</strong>
-                        <div class="dur">5 min read</div>
+                    @if($latest_blogs->isEmpty())
+                        <p class="no-blog">No latest blogs found.</p>
+                    @else
+                        @foreach($latest_blogs as  $latest_blog)
+                            <div class="blogs_link">
+                                <a href="{{route('prompt.blogs_details' ,$latest_blog->slug)}}"><strong>{{$latest_blog->title}}</strong></a>
+                                <div class="dur">5 min read</div>
+                            </div>
+                        @endforeach
+                    @endif
+
                 </div>
-                @endfor
-            </div>
         </div>
     </div>
     </div>

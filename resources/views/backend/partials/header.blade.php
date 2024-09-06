@@ -17,9 +17,16 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.css" crossorigin="anonymous" />
       <!-- FancyBox CSS -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.7/axios.min.js" integrity="sha512-DdX/YwF5e41Ok+AI81HI8f5/5UsoxCVT9GKYZRIzpLxb8Twz4ZwPPX+jQMwMhNQ9b5+zDEefc+dcvQoPWGNZ3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Include MediumEditor CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/medium-editor@5.23.5/dist/css/medium-editor.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/medium-editor@5.23.5/dist/css/themes/default.min.css" rel="stylesheet">
+    <!-- Include MediumEditor JS -->
+    <script src="https://cdn.jsdelivr.net/npm/medium-editor@5.23.5/dist/js/medium-editor.min.js"></script>
 
 <!-- FancyBox JS -->
-
 
 
 </head>
@@ -77,7 +84,80 @@
         </div>
     </div>
 </header>
+<div id="addBlog" class="modal fade started_modal" role="dialog">
+    <div class="modal-dialog">
 
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <h4>Add Blog</h4>
+                <div class="form-group">
+                    <label for="category">Category</label>
+                    <select id="category" name="category_id" required>
+                        <!-- Options will be dynamically populated -->
+                    </select>
+                </div>
+                <div class="form">
+                    <div class="form-group">
+                        <label for="blog_name">Blog Name</label>
+                        <input type="text" id="blog_name" name="blog_title" placeholder="Enter blog name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="blog_desc">Blog Description</label>
+                        <textarea id="blog_desc" name="blog_desc" placeholder="Enter blog description" rows="5" required></textarea>
+                    </div>
+                    <div class="form-group ">
+                        <div class="avatar-upload">
+                            <div class="avatar-edit">
+                                <input type='file' id="imageUpload" accept=".png, .jpg, .jpeg" />
+                                <label for="imageUpload"></label>
+                            </div>
+                            <div class="avatar-preview">
+                                <div id="imagePreview" style="background-image: url(https://2.bp.blogspot.com/-l9nGy2e3PnA/XLzG5A6u_cI/AAAAAAAAAgI/31bl8XZOrTwN0kTN8c18YOG3OhNiTUrsQCLcBGAs/s1600/rocket.png);">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button id="blogsubmit" class="gradient_btn d-block">Save </button>
+                    <div id="loader"></div>
+                    <div id="responseMessage" style="margin-top: 10px;"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<div id="categoryadd" class="modal fade started_modal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <h4>Add Category</h4>
+                <div class="form">
+                    <div class="form-group">
+                        <label for="blog_name">Category Name</label>
+                        <input type="text" id="category_name" name="category_name" placeholder="Enter category name" required>
+                    </div>
+                    <button id="categorysubmit" class="gradient_btn d-block">Save </button>
+                    <div id="loader"></div>
+                    <div id="responseMessage" style="margin-top: 10px;"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
 </html>
 
 <body>
@@ -93,9 +173,158 @@
     <script src="{{asset('backend/assets/js/custom.js')}}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
  <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.8.3/tinymce.min.js" integrity="sha512-VCEWnpOl7PIhbYMcb64pqGZYez41C2uws/M/mDdGPy+vtEJHd9BqbShE4/VNnnZdr7YCPOjd+CBmYca/7WWWCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Fetch categories and populate the dropdown
+            $.ajax({
+                url: "{{ route('categories') }}", // Adjust this URL to match your route
+                method: "GET",
+                success: function(response) {
+                    var categories = response;
+                    console.log(categories);
+                    var categorySelect = $('#category');
+                    categorySelect.empty();
+                    categorySelect.append('<option value="" disabled selected>Select Category</option>');
+                    $.each(categories, function(index, category) {
+                        categorySelect.append('<option value="' + category.id + '">' + category.name + '</option>');
+                    });
+                },
+                error: function(xhr) {
+                    console.log('Error fetching categories:', xhr);
+                }
+            });
+        });
+    </script>
+    <script>
+        tinymce.init({
+            selector: "#blog_desc",
+            height: "480",
+            menubar: false,
+            toolbar: [
+                "styleselect fontselect fontsizeselect",
+                "undo redo | cut copy paste | bold italic | link image | alignleft aligncenter alignright alignjustify",
+                "bullist numlist | outdent indent | blockquote subscript superscript | advlist | autolink | lists charmap | print preview | code"
+            ],
+            forced_root_block: true,
+            force_br_newlines: true,
+            force_p_newlines: true,
+            convert_newlines_to_brs: true,
+            plugins: "advlist autolink link image lists charmap print preview code",
+            content_style: "body { background-color: #fff; }", // Editor content background
+            setup: function(editor) {
+                editor.on('init', function() {
+                    // Apply custom styles to toolbar and header after initialization
+                    let toolbar = editor.contentDocument.querySelector('.tox-toolbar');
+                    if (toolbar) {
+                        toolbar.style.backgroundColor = "#4CAF50"; // Set the toolbar background color
+                    }
+                    let menubar = editor.contentDocument.querySelector('.tox-menubar');
+                    if (menubar) {
+                        menubar.style.backgroundColor = "#4CAF50"; // Set the menubar background color if enabled
+                    }
+                });
+            }
+        });
 
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('#blogsubmit').on('click', function(e) {
+                e.preventDefault();
+                $(this).prop('disabled', true);
+                $('#loader').show();
+
+                var title = $('#blog_name').val();
+                var category =$('#category').val();
+                var content = tinymce.get('blog_desc').getContent();
+                var image = $('#imageUpload')[0].files[0];
+                var formData = new FormData();
+                formData.append('blog_title', title);
+                formData.append('category',category);
+                formData.append('blog_desc', content);
+                formData.append('blog_image', image);
+                $('#responseMessage').empty();
+                var csrfToken = $('meta[name="csrf-token"]').attr('content');
+                $.ajax({
+                    url: "{{ route('blogs.store') }}",
+                    method: "POST",
+                    data: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    processData: false, // Necessary for file upload
+                    contentType: false,
+                    success: function(response) {
+                        $('#responseMessage').html('<div class="alert alert-success">Blog added successfully!</div>');
+                        $('#submitBlog').prop('disabled', false);
+                        $('#loader').hide();
+                        location.reload();
+                    },
+                    error: function(xhr) {
+                        $('#responseMessage').html('<div class="alert alert-danger">Error: ' + xhr.responseText + '</div>');
+                        $('#submitBlog').prop('disabled', false);
+                        $('#loader').hide();
+                    }
+                });
+            });
+
+
+            $('#categorysubmit').on('click', function(e) {
+                e.preventDefault();
+                $(this).prop('disabled', true);
+                $('#loader').show();
+
+                var category_name = $('#category_name').val();
+                var formData = new FormData();
+                formData.append('category_name', category_name);
+                $('#responseMessage').empty();
+                var csrfToken = $('meta[name="csrf-token"]').attr('content');
+                $.ajax({
+                    url: "{{ route('category.store') }}",
+                    method: "POST",
+                    data: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    processData: false, // Necessary for file upload
+                    contentType: false,
+                    success: function(response) {
+                        $('#responseMessage').html('<div class="alert alert-success">Category added successfully!</div>');
+                        $('#submitBlog').prop('disabled', false);
+                        $('#loader').hide();
+                        location.reload();
+                    },
+                    error: function(xhr) {
+                        $('#responseMessage').html('<div class="alert alert-danger">Error: ' + xhr.responseText + '</div>');
+                        $('#submitBlog').prop('disabled', false);
+                        $('#loader').hide();
+                    }
+                });
+            });
+        });
+
+    </script>
 
     <script>
+
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    $('#imagePreview').css('background-image', 'url('+e.target.result +')');
+                    $('#imagePreview').hide();
+                    $('#imagePreview').fadeIn(650);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        $("#imageUpload").change(function() {
+            readURL(this);
+        });
+
+
         Dropzone.options.myAwesomeDropzone = {
             url: "test",  // Add the correct upload URL here
             maxFilesize: 5, // MB

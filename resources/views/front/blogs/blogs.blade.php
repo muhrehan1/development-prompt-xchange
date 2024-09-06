@@ -17,25 +17,24 @@
 <section class="blogs_grid_sec">
     <div class="container-fluid">
         <div class="row">
-        @for ($i = 1; $i <= 6; $i++)
+        @foreach($blogs as $key => $blog)
+
             <div class="col-md-4">
                 <div class="blog_box">
                     <div class="blog_info">
-                    <img src="{{ asset('front/assets/img/blogs/' . $i . '.png') }}">
-
+                    <img src="{{ asset($blog->image) }}">
                         <div class="blog_cont_box">
-                        <div class="tag"><a href="javascript:;">Consectetur Ex Co</a></div>
-                        <h3>Aliqua Irure Tempor Lorem
-                            Occaecat Volup</h3>
+                        <div class="tag"><a href="#">{{ $blog->category->name ?? 'No Category' }}</a></div>
+                        <a href="{{route('prompt.blogs_details' ,$blog->slug)}}"><h3>{{$blog->title}}</h3></a>
                         <div class="date_info d-flex justify-content-between">
-                            <span class="date">Dec 24, 2022</span>
+                            <span class="date">{{ \Carbon\Carbon::parse($blog->publish_date)->format('M d, Y') }}</span>
                             <span>5 Mins Read</span>
                         </div>
                         </div>
                     </div>
                 </div>
             </div>
-            @endfor
+            @endforeach
             <div class="col-12">
                 <a href="javascript:;" class="trans_btn">See more articles</a>
             </div>

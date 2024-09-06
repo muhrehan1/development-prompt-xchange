@@ -6,6 +6,7 @@ use App\Models\Role;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Likes;
 
 class User extends Authenticatable
 {
@@ -61,4 +62,7 @@ class User extends Authenticatable
         return $this->roles()->where('slug', $role)->exists();
     }
 
+    public function user_likes(){
+        return $this->hasMany(Likes::class,  'user_id', 'id');
+    }
 }

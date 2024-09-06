@@ -7,8 +7,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="{{asset('front/assets/js/owl.carousel.min.js')}}"></script>
     <script src="{{asset('front/assets/js/custom.js')}}"></script>
-    <script src="{{asset('backend/assets/js/custom.js')}}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+{{--    <script src="{{asset('backend/assets/js/custom.js')}}"></script>--}}
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
     <!-- Initialize Slider -->
     <script type="text/javascript">
