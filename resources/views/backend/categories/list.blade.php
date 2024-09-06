@@ -57,7 +57,7 @@
                                 rows += '<td>' + (index + 1) + '</td>';
                                 rows += '<td>' + category.name + '</td>';
                                 rows += '<td>';
-                                rows += '<a href="javascript:;" class="edit" data-id="' + category.id + '"><i class="fa-solid fa-pencil"></i></a>';
+                                rows += '<a href="javascript:;"   data-toggle="modal" data-target="#categoryedit" class="edit" data-id="' + category.id + '"><i class="fa-solid fa-pencil"></i></a>';
                                 rows += '<a href="javascript:;" class="delete" data-id="' + category.id + '"><i class="fa-solid fa-trash"></i></a>';
                                 rows += '</td>';
                                 rows += '</tr>';
@@ -72,6 +72,33 @@
                 });
             }
             loadCategories();
+
+            $(document).on('click', '.edit', function() {
+                var categoryId = $(this).data('id'); // Get the category ID from the button's data attribute
+
+                // Make an AJAX request to fetch category data
+                $.ajax({
+                    url: "{{ route('categories.edit', ':id') }}".replace(':id', categoryId),
+                    method: 'GET',
+                    success: function(response) {
+                        if (response.success) {
+                            // Populate the modal form with the fetched data
+                            $('#editCategoryId').val(response.data.id);
+                            $('#update_category_name').val(response.data.name);
+
+                            // Show the modal
+                            $('#categoryedit').modal('show');
+                        } else {
+                            alert('Category not found.');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Failed to load category details:', error);
+                        alert('Failed to load category details.');
+                    }
+                });
+            });
+
 
             $('#categoriesTable').on('click', '.delete', function() {
                 const id = $(this).data('id');
@@ -95,6 +122,40 @@
                     });
                 }
             });
+            // Update Category Form Submission
+            $('#update_categorysubmit').on('click', function(event) {
+                event.preventDefault(); // Prevent the default form submission
+
+                var categoryId = $('#editCategoryId').val(); // Get the category ID from the hidden input
+                var categoryName = $('#update_category_name').val(); // Get the updated category name
+
+                // Make an AJAX request to update the category
+                $.ajax({
+                    url: "{{ route('categories.update', ':id') }}".replace(':id', categoryId),
+                    method: 'PUT',
+                    data: {
+                        category_name: categoryName,
+                        _token: "{{ csrf_token() }}"
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            location.reload();
+                            loadCategories();
+                            $('#categoryedit').modal('hide');
+                            $('#responseMessage').html('<div class="alert alert-success">Category updated successfully.</div>');
+                        } else {
+                            $('#responseMessage').html('<div class="alert alert-danger">Failed to update category.</div>');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Failed to update category:', error);
+                        $('#responseMessage').html('<div class="alert alert-danger">Failed to update category.</div>');
+                    }
+                });
+            });
+
+            // Initial Load
+            loadCategories();
 
 
         });

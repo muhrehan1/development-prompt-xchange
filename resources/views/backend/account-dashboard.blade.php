@@ -80,7 +80,7 @@
                         <h3>Monthly Active Users</h3>
                     </div>
                     <div class="chart-box">
-                        <div id="chart" style="height: 744px; width: 100%"></div>
+                        <div id="user-role-chart" style="width: 100%; height: 400px;"></div>
                     </div>
                 </div>
             </div>
@@ -89,6 +89,86 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.2.2/Chart.min.js"></script>
     <script src="https://code.angularjs.org/1.2.21/angular.js"></script>
     <script src="https://code.highcharts.com/highcharts.src.js"></script>
+    <script>
+        $(document).ready(function() {
+            $.ajax({
+                url: "{{ route('get_users_by_role') }}", // Route to get data
+                method: 'GET',
+                success: function(response) {
+                    console.log(response); // Debug response
+                    var contentCreatorData = response.content_creator.map(function(item) {
+                        return [item[0], item[1]];
+                    });
+                    var generalUserData = response.general_user.map(function(item) {
+                        return [item[0], item[1]];
+                    });
+
+                    console.log('Content Creator Data:', contentCreatorData);
+                    console.log('General User Data:', generalUserData);
+
+                    // Create the Highcharts graph
+                    Highcharts.chart('user-role-chart', {
+                        chart: {
+                            type: 'line',
+                            backgroundColor: '#000000'
+                        },
+                        title: {
+                            text: 'Monthly User Registrations by Role',
+                            style: {
+                                color: '#FFFFFF'
+                            }
+                        },
+                        xAxis: {
+                            categories: [...new Set(contentCreatorData.concat(generalUserData).map(item => item[0]))],
+                            title: {
+                                text: 'Month',
+                                style: {
+                                    color: '#FFFFFF'
+                                }
+                            },
+                            labels: {
+                                style: {
+                                    color: '#FFFFFF'
+                                }
+                            }
+                        },
+                        yAxis: {
+                            title: {
+                                text: 'Number of Registrations',
+                                style: {
+                                    color: '#FFFFFF'
+                                }
+                            },
+                            labels: {
+                                style: {
+                                    color: '#FFFFFF'
+                                }
+                            },
+                            gridLineColor: '#444444'
+                        },
+                        tooltip: {
+                            formatter: function() {
+                                return '<b>' + this.x + '</b><br/>' +
+                                    this.series.name + ': ' + this.y;
+                            },
+                            backgroundColor: '#000000',
+                            style: {
+                                color: '#FFFFFF'
+                            }
+                        },
+                        series: [{
+                            name: 'Content Creator',
+                            data: contentCreatorData
+                        }, {
+                            name: 'General User',
+                            data: generalUserData
+                        }]
+                    });
+                }
+            });
+        });
+
+    </script>
     <script>
         var ctx = document.getElementById("myChart").getContext('2d');
         var myChart = new Chart(ctx, {
@@ -123,55 +203,55 @@
         var data1 = generatePriceData();
         var data2 = generatePriceData();
 
-        var chart = new Highcharts.Chart({
-            chart: {
-                renderTo: 'chart',
-                type: 'line',
-                marginBottom: 80,
-                backgroundColor: '#000000' // Set background color to black
-            },
-            xAxis: {
-                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
-                labels: {
-                    rotation: 90,
-                    style: {
-                        color: '#FFFFFF' // Set x-axis labels color to white
-                    }
-                }
-            },
-            yAxis: {
-                title: {
-                    text: 'Value',
-                    style: {
-                        color: '#FFFFFF' // Set y-axis title color to white
-                    }
-                },
-                labels: {
-                    style: {
-                        color: '#FFFFFF' // Set y-axis labels color to white
-                    }
-                },
-                gridLineColor: '#444444' // Optional: Change grid line color to a lighter shade for better visibility
-            },
-            tooltip: {
-                formatter: function() {
-                    var label = this.series.name === 'This year' ? 'This year' : 'Last year';
-                    return '<b>' + this.x + '</b><br/>' +
-                        label + ': $' + Highcharts.numberFormat(this.y, 2); // Format tooltip value as currency
-                },
-                backgroundColor: '#000000', // Set tooltip background color to black
-                style: {
-                    color: '#FFFFFF' // Set tooltip text color to white
-                }
-            },
-            series: [{
-                name: 'This year',
-                data: data1.map(point => parseFloat(point.y))  // Convert y values to numbers
-            }, {
-                name: 'Last year',
-                data: data2.map(point => parseFloat(point.y))  // Convert y values to numbers
-            }]
-        });
+            // var chart = new Highcharts.Chart({
+            //     chart: {
+            //         renderTo: 'chart',
+            //         type: 'line',
+            //         marginBottom: 80,
+            //         backgroundColor: '#000000' // Set background color to black
+            //     },
+            //     xAxis: {
+            //         categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
+            //         labels: {
+            //             rotation: 90,
+            //             style: {
+            //                 color: '#FFFFFF' // Set x-axis labels color to white
+            //             }
+            //         }
+            //     },
+            //     yAxis: {
+            //         title: {
+            //             text: 'Value',
+            //             style: {
+            //                 color: '#FFFFFF' // Set y-axis title color to white
+            //             }
+            //         },
+            //         labels: {
+            //             style: {
+            //                 color: '#FFFFFF' // Set y-axis labels color to white
+            //             }
+            //         },
+            //         gridLineColor: '#444444' // Optional: Change grid line color to a lighter shade for better visibility
+            //     },
+            //     tooltip: {
+            //         formatter: function() {
+            //             var label = this.series.name === 'This year' ? 'This year' : 'Last year';
+            //             return '<b>' + this.x + '</b><br/>' +
+            //                 label + ': $' + Highcharts.numberFormat(this.y, 2); // Format tooltip value as currency
+            //         },
+            //         backgroundColor: '#000000', // Set tooltip background color to black
+            //         style: {
+            //             color: '#FFFFFF' // Set tooltip text color to white
+            //         }
+            //     },
+            //     series: [{
+            //         name: 'This year',
+            //         data: data1.map(point => parseFloat(point.y))  // Convert y values to numbers
+            //     }, {
+            //         name: 'Last year',
+            //         data: data2.map(point => parseFloat(point.y))  // Convert y values to numbers
+            //     }]
+            // });
     </script>
 
 @endsection

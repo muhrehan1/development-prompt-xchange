@@ -757,9 +757,9 @@ section.high-chart {
 .pricing_form tbody tr th:last-child {
     width: 10%;
 }
-.pricing_form tbody tr td:last-child {
-    text-align: center;
-}
+/*.pricing_form tbody tr td:last-child {*/
+/*    text-align: center;*/
+/*}*/
 .pricing_form th {
     padding: 15px 10px;
 }

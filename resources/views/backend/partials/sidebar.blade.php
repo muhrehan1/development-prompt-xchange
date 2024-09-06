@@ -48,6 +48,13 @@
                         <span>Prompts</span>
                     </a>
                 </li>
+                       <li class="{{ Request::routeIs('chat_user') ? 'active' : '' }}">
+                           <a href="{{ route('chat_user') }}">
+                               <img src="{{ asset('backend/assets/img/tag.png') }}" alt="">
+                               <span>Chat</span>
+                           </a>
+                       </li>
+
                  @endif
             </ul>
         </div>

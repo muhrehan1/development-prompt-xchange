@@ -58,13 +58,12 @@ class CategoryController extends Controller
         if (!$category) {
             return response()->json(['success' => false, 'message' => 'Category not found'], 404);
         }
-
         $request->validate([
-            'name' => 'required',
-            'slug' => 'required|unique:categories,slug,' . $id,
+            'category_name' => 'required|string|max:255',
         ]);
-
-        $category->update($request->all());
+        $category->name = $request->category_name;
+        $category->slug = Str::slug($request->input('category_name'));
+        $category->save();
 
         return response()->json([
             'success' => true,
@@ -72,6 +71,7 @@ class CategoryController extends Controller
             'data' => $category
         ]);
     }
+
 
     public function destroy($id)
     {

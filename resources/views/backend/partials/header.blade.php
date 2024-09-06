@@ -158,6 +158,33 @@
 
     </div>
 </div>
+
+
+<div id="categoryedit" class="modal fade started_modal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <h4>Update Category</h4>
+                <div class="form">
+                    <input type="hidden" id="editCategoryId" name="category_id">
+                    <div class="form-group">
+                        <label for="blog_name">Category Name</label>
+                        <input type="text" id="update_category_name" name="update_category_name" placeholder="Enter category name" required>
+                    </div>
+                    <button id="update_categorysubmit" class="gradient_btn d-block">Save </button>
+                    <div id="loader"></div>
+                    <div id="responseMessage" style="margin-top: 10px;"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
 </html>
 
 <body>

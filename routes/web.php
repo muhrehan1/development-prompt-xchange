@@ -16,6 +16,7 @@ Route::get('/pricing',[FrontController::class,'pricing'])->name('prompt.pricing'
 Route::get('/blogs',[FrontController::class,'blogs'])->name('prompt.blogs');;
 Route::get('/blog/{slug}',[FrontController::class,'blogs_details'])->name('prompt.blogs_details');
 
+Route::get('/get-users-by-role', [BackendController::class, 'getUsersByRole'])->name('get_users_by_role');
 Route::get('/discover',[FrontController::class,'discover'])->name('prompt.explore');
 Route::get('/hire',[FrontController::class,'hire'])->name('prompt.hire');
 Route::get('/creator/{slug}', [FrontController::class, 'creator_single'])->name('prompt.profile');
@@ -48,8 +49,9 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin-categories', [CategoryController::class, 'index'])->name('admin.categories');
     Route::get('/get-categories', [CategoryController::class, 'get_categories'])->name('categories');
     Route::post('/admin-categories/store', [CategoryController::class, 'store'])->name('category.store');
+    Route::get('categories/{id}', [CategoryController::class, 'edit'])->name('categories.edit');
     Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->name('categories.destroy');
-
+    Route::put('categories/{id}', [CategoryController::class, 'update'])->name('categories.update');
 
 });
 

@@ -17,7 +17,7 @@
                         <div class="col-md-3 col-sm-12">
                             <div class="hire_box">
                                 <a href="{{ route('prompt.profile', $creator->user_slug) }}">
-                                    <img src="{{ asset($creator->user_picture ?? 'front/assets/img/no-profile.png') }}" alt="{{ $creator->name }}">
+                                    <img src="{{ asset($creator->user_picture ?? 'front/assets/img/no-user.jpg') }}" alt="{{ $creator->name }}">
                                 </a>
                                 <ul class="view_list d-flex p-0">
                                     <li><i class="fa-regular fa-heart"></i>{{ number_format($creator->likes_count) }}</li>

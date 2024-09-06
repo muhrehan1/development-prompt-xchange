@@ -5,6 +5,7 @@ namespace App\Http\Controllers\backend;
 use App\Http\Controllers\Controller;
 use App\Models\Pricing;
 use App\Models\User;
+use Carbon\Carbon;
 use App\Models\PromptGeneration;
 use App\Models\GeneratedImage;
 use Illuminate\Support\Facades\Validator;
@@ -415,5 +416,40 @@ private function getModelBaseUrl($model)
 
             return view('backend.chat.chat' ,$data);
         }
+
+
+    public function getUsersByRole()
+    {
+        $users = DB::table('users')
+            ->join('role_user', 'users.id', '=', 'role_user.user_id')
+            ->join('roles', 'role_user.role_id', '=', 'roles.id')
+            ->select(
+                DB::raw('MONTH(users.created_at) as month'),
+                DB::raw('MONTHNAME(users.created_at) as month_name'),
+                'roles.slug  as role',
+                DB::raw('COUNT(*) as total')
+            )
+            ->whereYear('users.created_at', 2024)
+            ->groupBy(DB::raw('MONTH(users.created_at)'), DB::raw('MONTHNAME(users.created_at)'), 'roles.slug')
+            ->orderBy(DB::raw('MONTH(users.created_at)'))
+            ->get();
+
+        $formattedData = [
+            'content_creator' => [],
+            'general_user' => []
+        ];
+        foreach ($users as $user) {
+
+            if ($user->role === 'content_creator') {
+                $formattedData['content_creator'][] = [$user->month_name, $user->total];
+            } elseif ($user->role === 'general_user') {
+                $formattedData['general_user'][] = [$user->month_name, $user->total];
+            }
+        }
+
+        // Return data as JSON
+        return response()->json($formattedData);
+    }
+
 
 }
